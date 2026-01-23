@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+public class ZonaSegura : MonoBehaviour
+{
+    [Header("Actuadores de la Sala")]
+    public Light iluminacionPrincipal;
+
+    [Header("Conexiones")]
+    public PuertaMisteriosa puertaDeEntrada;
+
+    // Ya no usamos 'GameObject', usamos el tipo específico para poder cambiarle el texto y color
+    public TextMeshProUGUI pantallaEstado;
+
+    private bool zonaActivada = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // AHORA EL IF ES MÁS ESTRICTO:
+        // 1. ¿Es el jugador?
+        // 2. ¿No se ha activado antes?
+        // 3. ¿LA PUERTA ESTÁ REALMENTE ABIERTA? (NUEVO)
+        if (other.CompareTag("Player") && !zonaActivada && puertaDeEntrada.estaAbierta)
+        {
+            EjecutarProtocoloEncendido();
+        }
+        else
+        {
+            // Opcional: Feedback de error si intentan entrar con la puerta cerrada
+            Debug.Log(">> ACCESO DENEGADO: La compuerta de seguridad no está abierta.");
+        }
+    }
+    
+
+    void EjecutarProtocoloEncendido()
+    {
+        zonaActivada = true;
+        Debug.Log(">> SISTEMA ONLINE.");
+
+        // Feedback Ambiental (Luz)
+        if (iluminacionPrincipal != null)
+        {
+            iluminacionPrincipal.color = Color.cyan;
+            iluminacionPrincipal.intensity = 2.0f;
+        }
+
+        // Feedback de Datos (TextMeshPro)
+        if (pantallaEstado != null)
+        {
+            // NUEVO: Nos aseguramos de que el objeto esté ENCENDIDO (visible)
+            pantallaEstado.gameObject.SetActive(true);
+
+            // Cambiamos el contenido
+            pantallaEstado.text = "SYSTEM ONLINE";
+            pantallaEstado.color = Color.green;
+        }
+        else
+        {
+            // Si olvidaste arrastrar el texto, esto te avisará en la consola
+            Debug.LogError("¡OJO! No arrastraste el Texto (TMP) al script ZonaSegura");
+        }
+    }
+}
