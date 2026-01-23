@@ -4,34 +4,35 @@ using UnityEngine;
 
 public class PuertaMisteriosa : MonoBehaviour
 {
-    private bool estaAbierta = false;
-    public float velocidadApertura = 2.0f;
-    public float anguloApertura = 90f; // Grados que va a girar
+     public bool estaAbierta = false;
+ public float velocidadApertura = 2.0f;
+ public float anguloApertura = 90f; // Grados que va a girar
 
-    private Quaternion rotacionInicial;
-    private Quaternion rotacionFinal;
+ private Quaternion rotacionInicial;
+ private Quaternion rotacionFinal;
 
-    void Start()
-    {
-        // Guardamos cÛmo est· la puerta al principio
-        rotacionInicial = transform.rotation;
-        // Calculamos cÛmo quedar· rotada 90 grados en el eje Y (el verde/vertical)
-        rotacionFinal = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + anguloApertura, transform.eulerAngles.z);
-    }
+ void Start()
+ {
+     // Guardamos c√≥mo est√° la puerta al principio
+     rotacionInicial = transform.rotation;
+     // Calculamos c√≥mo quedar√° rotada 90 grados en el eje Y (el verde/vertical)
+     rotacionFinal = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + anguloApertura, transform.eulerAngles.z);
+ }
 
-    void Update()
-    {
-        // Si la orden de abrirse es verdadera, rotamos suavemente
-        if (estaAbierta)
-        {
-            // Quaternion.Slerp hace una transiciÛn suave entre dos rotaciones
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotacionFinal, Time.deltaTime * velocidadApertura);
-        }
-    }
+ void Update()
+ {
+     // Si la orden de abrirse es verdadera, rotamos suavemente
+     if (estaAbierta)
+     {
+         // Quaternion.Slerp hace una transici√≥n suave entre dos rotaciones
+         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionFinal, Time.deltaTime * velocidadApertura);
+     }
+ }
 
-    // Esta es la funciÛn que llamar· tu Personaje
-    public void AbrirPuerta()
-    {
-        estaAbierta = true;
-    }
+ // Esta es la funci√≥n que llamar√° tu Personaje
+ public void AbrirPuerta()
+ {
+     estaAbierta = true;
+ }
 }
+
