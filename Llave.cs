@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class Llave : MonoBehaviour
 {
-    void OnMouseDown() // O OnTriggerEnter si usas un First Person Controller
+       // Usamos OnTriggerEnter porque el personaje "camina sobre" el objeto
+    void OnTriggerEnter(Collider other)
     {
-        // COMUNICACIÓN: La llave busca al Instance y reporta
-        GameManager.Instance.RecogerLlave();
+        // Verificamos que sea el Player quien toca la llave
+        // IMPORTANTE: Tu personaje debe tener el Tag "Player"
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log(">> SENSOR ACTIVADO: CREDENCIAL RECIBIDA");
 
-        // Feedback visual (opcional: sonido o partículas)
-        Destroy(gameObject); // La llave desaparece
+            // ComunicaciÃ³n con el Sistema Central (GameManager)
+            GameManager.Instance.RecogerLlave();
+
+            // Feedback: Destruir objeto
+            Destroy(gameObject);
+        }
     }
 }
+
