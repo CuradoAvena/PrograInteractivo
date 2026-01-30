@@ -6,9 +6,7 @@ public class ThridPersonController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float turnSpeed = 700f;
-
-    // BORRAMOS LAS VARIABLES DE PUERTA Y CONTEO
-    // El personaje no debe saber contar llaves, eso es trabajo del GameManager.
+
 
     private CharacterController controller;
     private Animator animator;
@@ -28,9 +26,9 @@ public class ThridPersonController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        // --- CAMBIO IMPORTANTE: Dirección relativa a la Cámara ---
+        // --- CAMBIOS---//
 
-        // 1. Obtenemos hacia dónde mira la cámara
+        // 1. Obtenemos hacia dÃ³nde mira la cÃ¡mara
         Vector3 camForward = UnityEngine.Camera.main.transform.forward;
         Vector3 camRight = UnityEngine.Camera.main.transform.right;
 
@@ -40,7 +38,7 @@ public class ThridPersonController : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
-        // 3. Calculamos la dirección final sumando los vectores
+        // 3. Calculamos la direcciÃ³n final sumando los vectores
         Vector3 direction = (camForward * vertical + camRight * horizontal).normalized;
 
         if (direction.magnitude >= 0.1f)
