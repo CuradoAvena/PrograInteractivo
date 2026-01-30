@@ -4,35 +4,44 @@ using UnityEngine;
 
 public class PuertaMisteriosa : MonoBehaviour
 {
-     public bool estaAbierta = false;
- public float velocidadApertura = 2.0f;
- public float anguloApertura = 90f; // Grados que va a girar
+    // Hacemos pública esta variable para ver en el Inspector si cambia el check
+    public bool estaAbierta = false;
 
- private Quaternion rotacionInicial;
- private Quaternion rotacionFinal;
+    public float velocidad = 2.0f;
+    public float anguloApertura = 90f;
 
- void Start()
- {
-     // Guardamos cÃ³mo estÃ¡ la puerta al principio
-     rotacionInicial = transform.rotation;
-     // Calculamos cÃ³mo quedarÃ¡ rotada 90 grados en el eje Y (el verde/vertical)
-     rotacionFinal = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + anguloApertura, transform.eulerAngles.z);
- }
+    private Quaternion rotacionCerrada;
+    private Quaternion rotacionAbierta;
 
- void Update()
- {
-     // Si la orden de abrirse es verdadera, rotamos suavemente
-     if (estaAbierta)
-     {
-         // Quaternion.Slerp hace una transiciÃ³n suave entre dos rotaciones
-         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionFinal, Time.deltaTime * velocidadApertura);
-     }
- }
+    void Start()
+    {
+        // Guardamos la rotación inicial como "Cerrada"
+        rotacionCerrada = transform.rotation;
 
- // Esta es la funciÃ³n que llamarÃ¡ tu Personaje
- public void AbrirPuerta()
- {
-     estaAbierta = true;
- }
+        // Calculamos la rotación "Abierta" sumando el ángulo
+        rotacionAbierta = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + anguloApertura, transform.eulerAngles.z);
+    }
+
+    void Update()
+    {
+        // --- AQUÍ ESTABA EL PROBLEMA ---
+        // Antes solo tenías un 'if(estaAbierta)'.
+        // Ahora usamos esta lógica: 
+        // "¿Estoy abierta? Ve a 'rotacionAbierta'. ¿No? Entonces ve a 'rotacionCerrada'."
+
+        Quaternion objetivo = estaAbierta ? rotacionAbierta : rotacionCerrada;
+
+        // Movemos la puerta suavemente hacia el objetivo actual
+        transform.rotation = Quaternion.Slerp(transform.rotation, objetivo, Time.deltaTime * velocidad);
+    }
+
+    public void AbrirPuerta()
+    {
+        estaAbierta = true;
+    }
+
+    public void CerrarPuerta()
+    {
+        estaAbierta = false; // Al volverse falso, el Update la mandará de regreso
+    }
 }
-
