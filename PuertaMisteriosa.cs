@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuertaMisteriosa : MonoBehaviour
+public class Puerta : MonoBehaviour
 {
-    // Hacemos p˙blica esta variable para ver en el Inspector si cambia el check
+    // Hacemos p√∫blica esta variable para ver en el Inspector si cambia el check
     public bool estaAbierta = false;
 
     public float velocidad = 2.0f;
@@ -15,19 +15,19 @@ public class PuertaMisteriosa : MonoBehaviour
 
     void Start()
     {
-        // Guardamos la rotaciÛn inicial como "Cerrada"
+        // Guardamos la rotaci√≥n inicial como "Cerrada"
         rotacionCerrada = transform.rotation;
 
-        // Calculamos la rotaciÛn "Abierta" sumando el ·ngulo
+        // Calculamos la rotaci√≥n "Abierta" sumando el √°ngulo
         rotacionAbierta = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + anguloApertura, transform.eulerAngles.z);
     }
 
     void Update()
     {
-        // --- AQUÕ ESTABA EL PROBLEMA ---
-        // Antes solo tenÌas un 'if(estaAbierta)'.
-        // Ahora usamos esta lÛgica: 
-        // "øEstoy abierta? Ve a 'rotacionAbierta'. øNo? Entonces ve a 'rotacionCerrada'."
+        // --- AQU√ç ESTABA EL PROBLEMA ---
+        // Antes solo ten√≠as un 'if(estaAbierta)'.
+        // Ahora usamos esta l√≥gica: 
+        // "¬øEstoy abierta? Ve a 'rotacionAbierta'. ¬øNo? Entonces ve a 'rotacionCerrada'."
 
         Quaternion objetivo = estaAbierta ? rotacionAbierta : rotacionCerrada;
 
@@ -42,6 +42,6 @@ public class PuertaMisteriosa : MonoBehaviour
 
     public void CerrarPuerta()
     {
-        estaAbierta = false; // Al volverse falso, el Update la mandar· de regreso
+        estaAbierta = false; // Al volverse falso, el Update la mandar√° de regreso
     }
 }
