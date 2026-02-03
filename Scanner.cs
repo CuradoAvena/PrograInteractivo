@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class Scanner : MonoBehaviour
 {
-    [Header("ConfiguraciÛn General")]
+    [Header("Configuraci√≥n General")]
     public float distancia = 10f;
     public LayerMask capaEscanear;
 
-    [Header("Restricciones de AlineaciÛn")]
-    public Transform cuerpoPersonaje; // <--- NUEVO: AquÌ arrastras a tu "Y Bot"
+    [Header("Restricciones de Alineaci√≥n")]
+    public Transform cuerpoPersonaje;
     [Range(10, 180)]
-    public float anguloMaximo = 60f;  // Grados permitidos (60 es un buen cono de visiÛn)
+    public float anguloMaximo = 60f;
 
     [Header("Interfaz (UI)")]
     public Image imagenMira;
@@ -51,31 +51,30 @@ public class Scanner : MonoBehaviour
         Ray rayo = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        // Dibujamos el rayo verde (C·mara)
+        // Dibujamos el rayo verde
         Debug.DrawRay(transform.position, transform.forward * distancia, Color.green);
 
         if (Physics.Raycast(rayo, out hit, distancia, capaEscanear))
-        {
-            // --- NUEVA L”GICA DE ¡NGULO ---
+       {
 
-            // 1. Calculamos la direcciÛn hacia el objeto desde el pecho del personaje
+            // 1. Calculamos la direcci√≥n hacia el objeto desde el pecho del personaje
             Vector3 direccionHaciaObjeto = (hit.point - cuerpoPersonaje.position).normalized;
 
-            // 2. Calculamos el ·ngulo entre "Hacia donde mira el pecho" y "Donde est· el objeto"
-            // (Ignoramos la altura Y para que no falle si el objeto est· en el suelo)
+            // 2. Calculamos el √°ngulo entre "Hacia donde mira el pecho" y "Donde est√° el objeto"
+            // (Ignoramos la altura Y para que no falle si el objeto est√° en el suelo)
             Vector3 frentePersonaje = cuerpoPersonaje.forward;
             frentePersonaje.y = 0;
             direccionHaciaObjeto.y = 0;
 
             float angulo = Vector3.Angle(frentePersonaje, direccionHaciaObjeto);
 
-            // 3. ValidaciÛn: Si el ·ngulo es mayor al permitido, el personaje NO est· mirando
+            // 3. Validaci√≥n: Si el √°ngulo es mayor al permitido, el personaje NO est√° mirando
             if (angulo > anguloMaximo)
             {
-                // Opcional: PodrÌas poner un Debug para ver el ·ngulo
-                // Debug.Log("¡ngulo incorrecto: " + angulo);
+                // Opcional: Podr√≠as poner un Debug para ver el √°ngulo
+                // Debug.Log("√Ångulo incorrecto: " + angulo);
                 LimpiarUI();
-                return; // Cortamos aquÌ. No leemos datos.
+                return; // Cortamos aqu√≠. No leemos datos.
             }
             // -----------------------------
 
