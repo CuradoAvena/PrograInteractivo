@@ -1,0 +1,82 @@
+using UnityEngine;
+
+public class ThirdPersonController : MonoBehaviour
+{
+    [Header("Movimiento")]
+    public float moveSpeed = 5f;
+    public float turnSpeed = 700f;
+
+    [Header("Salto y Gravedad")]
+    public float jumpHeight = 1.5f;   // Qué tan alto salta
+    public float gravity = -15.0f;    // Gravedad (más fuerte que -9.81 se siente mejor)
+    
+    [Header("Detección de Suelo")]
+    public Transform groundCheck;      // Objeto vacío en los pies
+    public float groundDistance = 0.4f;// Radio de la esfera de detección
+    public LayerMask groundMask;       // Capa del suelo (Default o Ground)
+
+    // Referencias
+    private CharacterController controller;
+    private Animator animator;
+
+    // Variables internas
+    private Vector3 velocity;          // Velocidad vertical (caída/salto)
+    private bool isGrounded;           // ¿Estamos tocando el piso?
+    private float turnSmoothVelocity;
+    private float turnSmoothTime = 0.1f;
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        // 1. DETECTAR EL SUELO
+        // Crea una esferita invisible en los pies para ver si tocamos piso
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        // Actualizamos el Animator para saber si está cayendo o en el suelo
+        animator.SetBool("IsGrounded", isGrounded);
+
+        // Si estamos en el suelo y la velocidad es de caída, la reseteamos a algo pequeño
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f; // Un empujón pequeño para mantenerlo pegado al piso
+        }
+
+        // 2. MOVIMIENTO (Igual que ayer)
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            // Ángulo de la cámara
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            controller.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
+        }
+
+        // 3. SALTO (Lógica Nueva)
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            // Fórmula física del salto: Raíz cuadrada de (Altura * -2 * Gravedad)
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            
+            // Disparar animación
+            animator.SetTrigger("Jump");
+        }
+
+        // 4. APLICAR GRAVEDAD
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+
+        // Animación de correr
+        animator.SetFloat("Speed", direction.magnitude);
+    }
+}
