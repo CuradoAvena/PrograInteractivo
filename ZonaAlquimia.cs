@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ZonaAlquimia : MonoBehaviour
 {
-    [Header("Cámaras")]
+    [Header("CÃ¡maras")]
     public GameObject camaraJugador;
     public GameObject camaraPuzzle;
 
-    [Header("Control Quirúrgico del Jugador")]
+    [Header("Control QuirÃºrgico del Jugador")]
     public MonoBehaviour scriptMovimiento;
     public CharacterController controlFisico;
 
@@ -15,7 +15,7 @@ public class ZonaAlquimia : MonoBehaviour
 
     // ESTADO INTERNO
     private bool enModoPuzzle = false;
-    private bool puzzleTerminado = false; // <--- NUEVA VARIABLE CANDADO
+    private bool puzzleTerminado = false;
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class ZonaAlquimia : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // CONDICIÓN ACTUALIZADA: Solo entramos si NO hemos terminado el puzzle
+        // CONDICIÃ“N ACTUALIZADA: Solo entramos si NO hemos terminado el puzzle
         if (other.CompareTag("Player") && !enModoPuzzle && !puzzleTerminado)
         {
             ActivarModoPuzzle();
@@ -55,7 +55,7 @@ public class ZonaAlquimia : MonoBehaviour
         puzzleTerminado = true;
         enModoPuzzle = false;
 
-        // 2. CAMBIO DE CÁMARAS
+        // 2. CAMBIO DE CÃMARAS
         camaraPuzzle.SetActive(false);
         camaraJugador.SetActive(true);
 
@@ -73,3 +73,4 @@ public class ZonaAlquimia : MonoBehaviour
         Debug.Log("Saliendo del puzzle... Jugador libre.");
     }
 }
+
