@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class InputAlquimia : MonoBehaviour
 {
-    [Header("Configuración")]
-    // CORRECCIÓN 1: Especificamos que es una cámara de Unity
+    [Header("ConfiguraciÃ³n")]
+    //Especificamos que es una cÃ¡mara de Unity
     public UnityEngine.Camera camaraPuzzle;
 
     void Update()
     {
-        // Seguridad: Si olvidaste arrastrar la cámara, no hace nada
+        // Seguridad: Si olvidaste arrastrar la cÃ¡mara, no hace nada
         if (camaraPuzzle == null) return;
 
         if (Input.GetMouseButtonDown(0))
         {
-            // CORRECCIÓN 2: Usamos la variable explícita
+            // CORRECCIÃ“N 2: Usamos la variable explÃ­cita
             Ray ray = camaraPuzzle.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -22,10 +22,11 @@ public class InputAlquimia : MonoBehaviour
                 Ingrediente ing = hit.collider.GetComponent<Ingrediente>();
                 if (ing != null)
                 {
-                    // Llama a la función "Agregar" (Asegúrate de actualizar el otro script también)
+                    // Llama a la funciÃ³n "Agregar"
                     ing.Agregar();
                 }
             }
         }
     }
 }
+
