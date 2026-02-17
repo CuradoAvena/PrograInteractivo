@@ -10,8 +10,8 @@ public class GuardiaPatrulla : MonoBehaviour
     [Header("Componentes")]
     public NavMeshAgent agente;
     public Animator animator;
-    public Transform jugador; // Arrastra a tu personaje aquí
-
+    public Transform jugador; 
+    
     [Header("Patrullaje")]
     public Transform[] puntosRuta;
     public float distanciaMinima = 0.5f;
@@ -29,7 +29,7 @@ public class GuardiaPatrulla : MonoBehaviour
         if (agente == null) agente = GetComponent<NavMeshAgent>();
         if (animator == null) animator = GetComponent<Animator>();
 
-        // Auto-detectar al jugador si se te olvida ponerlo (busca por Tag)
+        
         if (jugador == null && GameObject.FindGameObjectWithTag("Player") != null)
         {
             jugador = GameObject.FindGameObjectWithTag("Player").transform;
@@ -50,7 +50,7 @@ public class GuardiaPatrulla : MonoBehaviour
         }
         else
         {
-            // Si te pierde de vista por distancia, deja de perseguir (Opcional)
+           
             if (persiguiendo && Vector3.Distance(transform.position, jugador.position) > rangoVision * 1.5f)
             {
                 persiguiendo = false;
@@ -60,7 +60,7 @@ public class GuardiaPatrulla : MonoBehaviour
             }
         }
 
-        // 2. COMPORTAMIENTO
+      
         if (persiguiendo)
         {
             // MODO PERSECUCIÓN: Correr hacia el jugador
@@ -114,8 +114,7 @@ public class GuardiaPatrulla : MonoBehaviour
                     }
                     else
                     {
-                        // Si toca una pared ("Wall", "Untagged", etc), el rayo se bloqueó.
-                        // Debug.Log("No te veo, hay una pared: " + hit.transform.name);
+                       
                         return false;
                     }
                 }
@@ -140,7 +139,7 @@ public class GuardiaPatrulla : MonoBehaviour
         }
     }
 
-    // --- ESTO DIBUJA EL CONO EN EL EDITOR ---
+ 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -154,3 +153,4 @@ public class GuardiaPatrulla : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + visionIzquierda * rangoVision);
     }
 }
+
