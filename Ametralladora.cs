@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class Ametralladora : MonoBehaviour
 {
-    [Header("Configuración del Arma")]
-    public GameObject balaPrefab;      // La bolita que van a disparar
-    public Transform puntoDeDisparo;   // De dónde sale la bala (la punta del cañón)
+    [Header("ConfiguraciÃ³n del Arma")]
+    public GameObject balaPrefab;      
+    public Transform puntoDeDisparo;   
     public float fuerzaDisparo = 2000f;
-    public float cadencia = 0.1f;      // Qué tan rápido dispara (0.1 = muy rápido)
+    public float cadencia = 0.1f;     
 
     private float tiempoProximoDisparo = 0f;
 
     void Update()
     {
-        // Si dejan presionado el clic izquierdo y ya pasó el tiempo de recarga
+        // Si dejan presionado el clic izquierdo y ya pasÃ³ el tiempo de recarga
         if (Input.GetButton("Fire1") && Time.time >= tiempoProximoDisparo)
         {
             tiempoProximoDisparo = Time.time + cadencia;
@@ -32,7 +32,8 @@ public class Ametralladora : MonoBehaviour
             rb.AddForce(puntoDeDisparo.forward * fuerzaDisparo);
         }
 
-        // 3. Destruir la bala después de 3 segundos para que no sature la memoria
+        // 3. Destruir la bala despuÃ©s de 3 segundos para que no sature la memoria
         Destroy(bala, 3f);
     }
 }
+
