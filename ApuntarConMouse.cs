@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ApuntarConMouse : MonoBehaviour
 {
-    [Header("Límites de Rotación")]
-    [Tooltip("El ángulo mínimo hacia la izquierda/derecha")]
+    [Header("LÃ­mites de RotaciÃ³n")]
+    [Tooltip("El Ã¡ngulo mÃ­nimo hacia la izquierda/derecha")]
     public float anguloMinimo = 0f;
 
-    [Tooltip("El ángulo máximo hacia la izquierda/derecha")]
+    [Tooltip("El Ã¡ngulo mÃ¡ximo hacia la izquierda/derecha")]
     public float anguloMaximo = 180f;
 
     void Update()
@@ -20,26 +20,27 @@ public class ApuntarConMouse : MonoBehaviour
         {
             Vector3 puntoParaMirar = rayo.GetPoint(distancia);
 
-            // 2. Calcular la dirección hacia el mouse (ignorando la altura para que no cabecee)
+            // 2. Calcular la direcciÃ³n hacia el mouse
             Vector3 direccion = puntoParaMirar - transform.position;
             direccion.y = 0;
 
-            // 3. Crear la rotación ideal
+            // 3. Crear la rotaciÃ³n ideal
             Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
             Vector3 angulos = rotacionDeseada.eulerAngles;
 
-            // 4. Truco para que Unity no se confunda con los ángulos mayores a 180
+            // 4. Truco para que Unity no se confunda con los Ã¡ngulos mayores a 180
             float anguloY = angulos.y;
             if (anguloY > 180)
             {
                 anguloY -= 360;
             }
 
-            // 5. ¡AQUÍ ESTÁ LA MAGIA! Limitamos el ángulo a lo que tú decidas
+            // 5. Limitamos el Ã¡ngulo a lo que tÃº decidas
             anguloY = Mathf.Clamp(anguloY, anguloMinimo, anguloMaximo);
 
-            // 6. Aplicamos la rotación ya limitada
+            // 6. Aplicamos la rotaciÃ³n ya limitada
             transform.rotation = Quaternion.Euler(0, anguloY, 0);
         }
     }
 }
+
