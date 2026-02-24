@@ -2,20 +2,19 @@ using UnityEngine;
 
 public class Bala : MonoBehaviour
 {
-    [Header("Efectos de Explosión")]
+    [Header("Efectos de ExplosiÃ³n")]
     public float radioExplosion = 5f;
     public float fuerzaExplosion = 500f;
-    public GameObject particulasExplosion; // Para que le pongan fuego al chocar
-
+    public GameObject particulasExplosion; 
     void OnCollisionEnter(Collision collision)
     {
-        // Mostrar partículas si asignaron alguna
+        // Mostrar partÃ­culas si asignaron alguna
         if (particulasExplosion != null)
         {
             Instantiate(particulasExplosion, transform.position, transform.rotation);
         }
 
-        // Detectar todo lo que esté cerca del impacto
+        // Detectar todo lo que estÃ© cerca del impacto
         Collider[] objetosGolpeados = Physics.OverlapSphere(transform.position, radioExplosion);
 
         foreach (Collider obj in objetosGolpeados)
@@ -23,7 +22,7 @@ public class Bala : MonoBehaviour
             Rigidbody rbObj = obj.GetComponent<Rigidbody>();
             if (rbObj != null)
             {
-                // Aplicar la fuerza de explosión a los aviones/cubos
+                // Aplicar la fuerza de explosiÃ³n a los cubos
                 rbObj.AddExplosionForce(fuerzaExplosion, transform.position, radioExplosion);
             }
         }
@@ -32,3 +31,4 @@ public class Bala : MonoBehaviour
         Destroy(gameObject);
     }
 }
+
