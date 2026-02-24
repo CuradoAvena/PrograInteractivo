@@ -2,26 +2,26 @@ using UnityEngine;
 
 public class GeneradorHorda : MonoBehaviour
 {
-    [Header("ConfiguraciÛn de la Horda")]
-    [Tooltip("Arrastra aquÌ el Prefab del Cubo Enemigo")]
+    [Header("Configuraci√≥n de la Horda")]
+    [Tooltip("Arrastra aqu√≠ el Prefab del Cubo Enemigo")]
     public GameObject enemigoPrefab;
 
-    [Tooltip("Cada cu·ntos segundos aparece un nuevo enemigo")]
+    [Tooltip("Cada cu√°ntos segundos aparece un nuevo enemigo")]
     public float tiempoEntreEnemigos = 2f;
 
-    [Header("Zonas de ApariciÛn")]
-    [Tooltip("Arrastra aquÌ los objetos vacÌos desde donde saldr·n los enemigos")]
+    [Header("Zonas de Aparici√≥n")]
+    [Tooltip("Arrastra aqu√≠ los objetos vac√≠os desde donde saldr√°n los enemigos")]
     public Transform[] puntosDeAparicion;
 
     void Start()
     {
-        // Iniciar la creaciÛn de enemigos repitiendo la funciÛn cada X segundos
+        // Iniciar la creaci√≥n de enemigos repitiendo la funci√≥n cada X segundos
         InvokeRepeating("CrearEnemigo", 1f, tiempoEntreEnemigos);
     }
 
     void CrearEnemigo()
     {
-        // Evitar errores si el alumno olvidÛ poner puntos de apariciÛn
+        // Evitar errores si olvidaste poner puntos de aparici√≥n
         if (puntosDeAparicion.Length == 0) return;
 
         // Elegir un punto al azar de la lista
@@ -32,3 +32,4 @@ public class GeneradorHorda : MonoBehaviour
         Instantiate(enemigoPrefab, puntoElegido.position, puntoElegido.rotation);
     }
 }
+
