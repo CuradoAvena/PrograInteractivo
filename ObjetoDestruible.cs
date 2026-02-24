@@ -3,19 +3,19 @@ using UnityEngine;
 public class ObjetoDestruible : MonoBehaviour
 {
     [Header("El modelo roto")]
-    [Tooltip("Arrastra aquí el Prefab del objeto cortado en pedazos")]
+    [Tooltip("Arrastra aquÃ­ el Prefab del objeto cortado en pedazos")]
     public GameObject versionRotaPrefab;
 
     [Header("Efectos Visuales")]
     public GameObject particulasExplosion; // Fuego o humo opcional
 
     [Header("Limpieza")]
-    [Tooltip("Cuántos segundos tardan los pedazos en desaparecer")]
+    [Tooltip("CuÃ¡ntos segundos tardan los pedazos en desaparecer")]
     public float tiempoDeVidaPedazos = 5f;
-    // Esta función se activa en el instante que algo choca contra este objeto
+    // Esta funciÃ³n se activa en el instante que algo choca contra este objeto
     void OnCollisionEnter(Collision collision)
     {
-        // Verificamos si lo que nos golpeó tiene la etiqueta "Bala"
+        // Verificamos si lo que nos golpeÃ³ tiene la etiqueta "Bala"
         if (collision.gameObject.CompareTag("Bala"))
         {
             RomperEnPedazos();
@@ -24,18 +24,17 @@ public class ObjetoDestruible : MonoBehaviour
 
     void RomperEnPedazos()
     {
-        // 1. Mostrar las partículas de humo/fuego si el alumno asignó alguna
+        // 1. Mostrar las partÃ­culas de humo/fuego si asignaste alguna
         if (particulasExplosion != null)
         {
             Instantiate(particulasExplosion, transform.position, transform.rotation);
         }
 
-        // 2. Instanciar la versión hecha pedazos exactamente en la misma posición y rotación
+        // 2. Instanciar la versiÃ³n hecha pedazos exactamente en la misma posiciÃ³n y rotaciÃ³n
         if (versionRotaPrefab != null)
         {
             GameObject pedazos = Instantiate(versionRotaPrefab, transform.position, transform.rotation);
 
-            // Opcional: Empujar los pedacitos un poco hacia afuera para mayor dramatismo
             // Buscamos todos los Rigidbodies dentro del modelo fracturado
             Rigidbody[] rbs = pedazos.GetComponentsInChildren<Rigidbody>();
             foreach (Rigidbody rb in rbs)
@@ -50,3 +49,4 @@ public class ObjetoDestruible : MonoBehaviour
         Destroy(gameObject);
     }
 }
+
