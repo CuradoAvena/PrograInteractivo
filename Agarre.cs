@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Agarre : MonoBehaviour
 {
-    [Header("Configuraci�n de las Manos")]
+    [Header("Configuracion de las Manos")]
     public Transform puntoDeAgarre;
     public float distanciaAgarre = 3f;
     public LayerMask capaInteractuable;
@@ -19,7 +19,7 @@ public class Agarre : MonoBehaviour
     [Header("Controles")]
     public InputAction interactuarAction;
 
-    // Variables internas
+   
     private GameObject objetoEnMano;
     private Rigidbody rbObjeto;
 
@@ -28,10 +28,10 @@ public class Agarre : MonoBehaviour
 
     void Update()
     {
-        // 1. Siempre revisamos qu� estamos mirando para el Feedback Visual
+        // 1. Siempre revisamos que estamos mirando para el Feedback Visual
         ManejarFeedbackVisual();
 
-        // 2. Leer el bot�n para agarrar/soltar
+        // 2. Leer el boton para agarrar/soltar
         if (interactuarAction.WasPressedThisFrame())
         {
             if (objetoEnMano == null) IntentarAgarre();
@@ -41,21 +41,21 @@ public class Agarre : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Expansi�n C: El Agarre por F�sicas (Se hace en FixedUpdate porque son f�sicas)
+        // Expansión C: El Agarre por Físicas (Se hace en FixedUpdate porque son físicas)
         if (objetoEnMano != null && rbObjeto != null)
         {
-            // Calculamos la direcci�n y distancia entre el cubo y nuestras manos
+            // Calculamos la dirección y distancia entre el cubo y nuestras manos
             Vector3 direccionHaciaMano = puntoDeAgarre.position - rbObjeto.position;
             float distancia = direccionHaciaMano.magnitude;
 
-            // Movemos el objeto usando velocidad f�sica, NO teletransport�ndolo
+            // Movemos el objeto usando velocidad física, NO teletransportándolo
             rbObjeto.linearVelocity = direccionHaciaMano * fuerzaAtraccion * distancia;
         }
     }
 
     void ManejarFeedbackVisual()
     {
-        // Si ya tenemos algo en la mano, no iluminamos nada m�s
+        // Si ya tenemos algo en la mano, no iluminamos nada más
         if (objetoEnMano != null)
         {
             ApagarBrillo();
@@ -68,19 +68,19 @@ public class Agarre : MonoBehaviour
         {
             Renderer rend = impacto.collider.GetComponent<Renderer>();
 
-            // Si miramos a un cubo nuevo que no est� iluminado
+            // Si miramos a un cubo nuevo que no está iluminado
             if (rend != null && rend != rendererIluminado)
             {
                 ApagarBrillo(); // Apagamos el anterior por si acaso
 
                 rendererIluminado = rend;
-                materialOriginal = rend.material; // Guardamos su color gris aburrido
+                materialOriginal = rend.material; // Guardamos su color gris
                 rend.material = materialBrillo;   // Le ponemos el material brillante
             }
         }
         else
         {
-            // Si miramos a la pared o al vac�o, apagamos el brillo
+            // Si miramos a la pared o al vacío, apagamos el brillo
             ApagarBrillo();
         }
     }
@@ -104,17 +104,17 @@ public class Agarre : MonoBehaviour
                 objetoEnMano = impacto.collider.gameObject;
                 rbObjeto = objetoEnMano.GetComponent<Rigidbody>();
 
-                // EXPANSI�N C: Magia de F�sicas (Ya no usamos SetParent ni isKinematic)
+                //(Ya no usamos SetParent ni isKinematic)
                 rbObjeto.useGravity = false; // Apagamos la gravedad para que flote
-                rbObjeto.linearDamping = 10f;         // Le ponemos mucha fricci�n al aire para que no gire como loco
-                rbObjeto.constraints = RigidbodyConstraints.FreezeRotation; // Congelamos su rotaci�n temporalmente
+                rbObjeto.linearDamping = 10f;         // Le ponemos mucha fricción al aire para que no gire como loco
+                rbObjeto.constraints = RigidbodyConstraints.FreezeRotation; // Congelamos su rotación temporalmente
             }
         }
     }
 
     void SoltarObjeto()
     {
-        // Revertimos las f�sicas a la normalidad para que caiga
+        // Revertimos las físicas a la normalidad para que caiga
         rbObjeto.useGravity = true;
         rbObjeto.linearDamping = 0f;
         rbObjeto.constraints = RigidbodyConstraints.None;
@@ -123,3 +123,4 @@ public class Agarre : MonoBehaviour
         rbObjeto = null;
     }
 }
+
