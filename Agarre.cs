@@ -10,7 +10,7 @@ public class Agarre : MonoBehaviour
     [Tooltip("Fuerza del rayo tractor para mover el objeto")]
     public float fuerzaAtraccion = 15f;
 
-    [Header("Feedback Visual (Expansi�n B)")]
+    [Header("Feedback Visual")]
     [Tooltip("El material brillante cuando lo miramos")]
     public Material materialBrillo;
     private Material materialOriginal;
@@ -123,4 +123,5 @@ public class Agarre : MonoBehaviour
         rbObjeto = null;
     }
 }
+
 
