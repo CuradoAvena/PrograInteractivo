@@ -1,0 +1,119 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// NUEVO CONCEPTO: Una "Estructura" nos permite agrupar datos. 
+// Le ponemos [System.Serializable] para que Unity nos deje verla en el Inspector.
+[System.Serializable]
+public struct Receta
+{
+    public TipoProducto ingredienteA;
+    public TipoProducto ingredienteB;
+    public GameObject prefabResultado; // El "C" que va a aparecer
+}
+
+public class MesaEnsamblaje : MonoBehaviour
+{
+    [Header("Libro de Recetas")]
+    [Tooltip("Aquí configuras qué combinaciones funcionan")]
+    public List<Receta> recetasPermitidas;
+    public float tiempoEnsamblaje = 2f;
+
+    [Header("Memoria de la Mesa")]
+    private GameObject objetoA;
+    private GameObject objetoB;
+    private bool ensamblando = false;
+
+    private void OnTriggerEnter(Collider otro)
+    {
+        if (ensamblando) return; // Si la mesa ya está trabajando, no aceptamos más
+
+        IdentidadProducto identidad = otro.GetComponent<IdentidadProducto>();
+
+        // Solo aceptamos productos que ya estén PROCESADOS (no crudos, no basura)
+        if (identidad != null && identidad.estadoActual == EstadoProducto.Procesado)
+        {
+            // Caso 1: La mesa está vacía, guardamos el primer ingrediente
+            if (objetoA == null)
+            {
+                objetoA = otro.gameObject;
+                FijarObjetoEnMesa(objetoA, -0.4f); // Lo acomodamos un poco a la izquierda
+            }
+            // Caso 2: Ya hay un ingrediente y llega un segundo distinto
+            else if (objetoA != otro.gameObject && objetoB == null)
+            {
+                objetoB = otro.gameObject;
+                FijarObjetoEnMesa(objetoB, 0.4f); // Lo acomodamos a la derecha
+
+                // ¡Tenemos los dos! Vamos a ver si forman una receta
+                TipoProducto tipoA = objetoA.GetComponent<IdentidadProducto>().tipoCubo;
+                TipoProducto tipoB = identidad.tipoCubo;
+                
+                RevisarReceta(tipoA, tipoB);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider otro)
+    {
+        // Si el jugador agarra el ingrediente antes de que se combine, vaciamos ese espacio
+        if (!ensamblando)
+        {
+            if (objetoA != null && otro.gameObject == objetoA) objetoA = null;
+            if (objetoB != null && otro.gameObject == objetoB) objetoB = null;
+        }
+    }
+
+    private void FijarObjetoEnMesa(GameObject obj, float offsetX)
+    {
+        // Congelamos las físicas para que el cubo no se caiga de la mesa
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+
+        // Lo acomodamos mágicamente arriba de la mesa
+        obj.transform.position = transform.position + Vector3.up * 1f + transform.right * offsetX;
+    }
+
+    private void RevisarReceta(TipoProducto tipoA, TipoProducto tipoB)
+    {
+        // Revisamos el libro de recetas página por página
+        foreach (Receta receta in recetasPermitidas)
+        {
+            // Verificamos si los ingredientes coinciden (sin importar en qué orden los pusieron)
+            bool coincidenciaDirecta = (receta.ingredienteA == tipoA && receta.ingredienteB == tipoB);
+            bool coincidenciaInversa = (receta.ingredienteA == tipoB && receta.ingredienteB == tipoA);
+
+            if (coincidenciaDirecta || coincidenciaInversa)
+            {
+                // ¡Hay receta! Arrancamos la máquina
+                StartCoroutine(RutinaEnsamblaje(receta.prefabResultado));
+                return; 
+            }
+        }
+
+        // Si el código llega hasta aquí, los dos ingredientes no forman nada útil
+        Debug.Log("Error: " + tipoA + " y " + tipoB + " no se pueden combinar.");
+        // Opcional: Podrían hacer que la mesa expulse los objetos físicos si se equivocan
+    }
+
+    private IEnumerator RutinaEnsamblaje(GameObject prefabResultado)
+    {
+        ensamblando = true;
+
+        // Esperamos a que se "cocine"
+        yield return new WaitForSeconds(tiempoEnsamblaje);
+
+        // Magia: Aparecemos el producto final "C" en el centro
+        Vector3 posicionFinal = transform.position + Vector3.up * 1.5f;
+        Instantiate(prefabResultado, posicionFinal, Quaternion.identity);
+
+        // Destruimos las piezas originales "A" y "B"
+        Destroy(objetoA);
+        Destroy(objetoB);
+
+        // Limpiamos la memoria de la mesa para el siguiente ensamble
+        objetoA = null;
+        objetoB = null;
+        ensamblando = false;
+    }
+}
